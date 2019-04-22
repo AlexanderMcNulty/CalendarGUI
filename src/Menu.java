@@ -1,6 +1,10 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -10,6 +14,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.Scanner;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import java.util.ArrayList;
@@ -18,6 +23,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -31,31 +37,22 @@ import java.awt.Dimension;
 public class Menu {
 	
 	private EventList events;
+	private String choice = null;
 	private String mainMenu = "\nSelect one of the following options:\n" + 
 							  "[V]iew by  [C]reate, [G]o to [E]vent list [D]elete  [Q]uit\n";			
 	private String viewBy = "\n[D]ay View or [M]onth view\n";
 	private String seeMoreDays = "\n[P]revious or [N]ext or [G]o back to main menu ?\n";
-
+	private String textToLoad;
+	private LocalDate selectedDay;
+	
 	/**
 	 * Constructs a 'Menu' object.
 	 * @param fileName - file to load events from
 	 * @throws FileNotFoundException if 'file' not found
 	 */
 	public Menu(String fileName) throws FileNotFoundException  {
-		initializeEventsList(fileName); 
-		
-
-		JFrame frame = new JFrame();
-		JLabel label = new JLabel();
-			
-		frame.setPreferredSize(new Dimension(290, 350));
-		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.lightGray));
-		frame.getContentPane().setBackground(Color.WHITE);
-		//frame.add(data, BorderLayout.SOUTH);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setVisible(true);
-		
+		initializeEventsList(fileName);
+		selectedDay = LocalDate.now();
 	}
 	
 
@@ -69,7 +66,7 @@ public class Menu {
 		File file = new File(fileName);
 		Scanner in = new Scanner(file);
 		//EventList repeatEvents = new EventList();
-		EventList events = new EventList(); 
+		events = new EventList(); 
 		//construct events from events.txt
 		while(in.hasNext()) {
 			title = in.nextLine();
@@ -112,22 +109,6 @@ public class Menu {
 			}
 		}
 		in.close();
-	}
-	
-	
-	
-	
-	/**
-	 * 'run' engages the user's terminal interface
-	 * function terminates when quits from 'mainMenu()'
-	 * - Takes no arguments.
-	 * - Returns nothing
-	 */
-	public void run() {
-		String choice = "";
-		while(!(choice.equals("Q"))) {
-			choice = mainMenu();
-		}
 	}
 	
 
@@ -191,42 +172,6 @@ public class Menu {
 	}
 
 
-	/**
-	 * 'getInput' creates whitespace, prompts users, takes the 'next' user input
-	 * - takes no arguments
-	 * @return String - of users command, to first whitespace
-	 */
-	public String getInput() {
-		Scanner reader = new Scanner(System.in);
-		System.out.print("\nEnter Command: ");
-		String toReturn = reader.next().toUpperCase();
-		System.out.println("");
-		return toReturn;
-	}
-
-
-	/**
-	 * 'getSilentInput' takes the 'next' user input, no prompt, no whitespace
-	 * - takes no arguments
-	 * @return String- of users command, to first whitespace
-	 */
-	public String getSilentInput() {
-		Scanner reader = new Scanner(System.in);
-		String toReturn = reader.next();
-		return toReturn;
-	}
-	
-
-	/**
-	 * 'getSilentInput' takes the 'next' user input,
-	 * - takes no arguments
-	 * @return String of users command, to first newline
-	 */
-	public String getSilentLineInput() {
-		Scanner reader = new Scanner(System.in);
-		String toReturn = reader.nextLine();
-		return toReturn;
-	}
 	
 
 	/**
@@ -255,34 +200,120 @@ public class Menu {
 	 * 'mainMenu' takes the 'next' user input, no prompt, no whitespace
 	 * - takes no arguments
 	 * @return String - used to determine if we should terminate the program.
-	 */
-	public String mainMenu() {
-		System.out.println(mainMenu);
-		String choice = getInput();
-		switch(choice) {
-			case "V": 
-				viewBy();
-				return choice;
-			case "C": 
-				createEvent();
-				return choice;
-			case "G": 
-				goTo();
-				return choice;
-			case "E": 
-				eventList();
-				return choice;
-			case "D": 
-				deleteEvent();
-				return choice; 
-			case "Q": 
-				System.out.println("\n\nGoodbye :(\n");
-				return choice;
-			default:
-				System.out.println("invalid option");
-				break;
-		}
+	 
+	case "V": 
+		viewBy();
 		return choice;
+	case "C": 
+		createEvent();
+		return choice;
+	case "G": 
+		goTo();
+		return choice;
+	case "E": 
+		eventList();
+		return choice;
+	case "D": 
+		deleteEvent();
+		return choice; 
+	case "Q": 
+		System.out.println("\n\nGoodbye :(\n");
+		return choice;
+	*/
+	
+
+	
+	/**
+	 * 'run' engages the user's terminal interface
+	 * function terminates when quits from 'mainMenu()'
+	 * - Takes no arguments.
+	 * - Returns nothing
+	 */
+	
+
+	
+	public void run() {
+		/*
+		String choice = "";
+		while(!(choice.equals("Q"))) {
+			choice = mainMenu();
+		}
+		*/
+
+		JFrame frame = new JFrame();
+		JPanel currentDayFrame = new JPanel();
+		JTextArea label1 = new JTextArea();		
+		
+		this.viewBy("D","G");
+		label1.setText(textToLoad);
+		textToLoad = "";
+		
+		JButton previousDayButton  = new JButton(); 
+		previousDayButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				viewBy("D","P");
+				label1.setText(textToLoad);
+				textToLoad = "";
+				label1.repaint();
+			}
+		});
+		
+		JButton nextDayButton = new JButton();
+		nextDayButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				viewBy("D","N");
+				label1.setText(textToLoad);
+				textToLoad = "";
+				currentDayFrame.repaint();
+			}
+		});
+		/*
+		nextDayButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				viewBy("D","N");
+				label1.setText(textToLoad);
+				textToLoad = "";
+			}
+		});
+		*/
+
+		currentDayFrame.add(label1, BorderLayout.CENTER);
+		currentDayFrame.add(previousDayButton, BorderLayout.WEST);
+		currentDayFrame.add(nextDayButton, BorderLayout.EAST);
+		frame.add(currentDayFrame, BorderLayout.EAST);
+		
+		
+		//readline read line by line contrusting leaf shaps to build a composite shpe
+		JTextArea label2 = new JTextArea();
+		this.viewBy("M", "G");
+		label2.setText(textToLoad);
+		textToLoad = "";
+		frame.add(label2, BorderLayout.NORTH);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		frame.setPreferredSize(new Dimension(290, 350));
+		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.lightGray));
+		frame.getContentPane().setBackground(Color.WHITE);
+		//frame.add(data, BorderLayout.SOUTH);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setVisible(true);
 	}
 	
 
@@ -291,32 +322,27 @@ public class Menu {
 	 * - takes no arguments
 	 * - returns nothing
 	 */
-	public void deleteEvent() {
+	public void deleteEvent(String choice, String dateInput1, String title, String dateInput2, String toDelete) {
 		System.out.println("Press [S] to Select a single event to delete, press [A] to delete all events on a certain day, enter [DR] to delete a regular event.");
-		String choice  = getInput();
 		if(choice.equals("S")) {
 			//choose a single non-repeating event to delete
 			//select date
 			System.out.print("Enter event date (MM/DD/YYYY): ");
-			String input = getSilentInput();
-			LocalDate date = stringToDate(input);
+			LocalDate date = stringToDate(dateInput1);
 			//select title
 			System.out.print("Enter event title: ");
-			String title = getSilentLineInput().trim();
 			events.deleteSingleEvent(title, date);
 		} else if(choice.equals("A")) {
 			//choose a date to delete all non-repeating events
 			//select a date
 			System.out.print("Enter event date (MM/DD/YYYY): ");
-			String input = getSilentInput();
-			LocalDate date = stringToDate(input);
+			LocalDate date = stringToDate(dateInput2);
 			events.deleteAllSingleEventsForASpecificDate(date);
 		} else if(choice.equals("DR")) {
 			//choose a repeating event to delete all repeating events
 			//select a title
 			System.out.print("Enter event title: ");
-			String input = getSilentLineInput();
-			events.deleteRepeatingEvents(input);
+			events.deleteRepeatingEvents(toDelete);
 		} else {
 			invalid();
 		}
@@ -368,15 +394,14 @@ public class Menu {
 	 * - takes no arguments
 	 * - returns nothing
 	 */
-	public void goTo() {
+	public void goTo(String input) {
 		System.out.print("Enter a date to go to (MM/DD/YYYY) or [C] to cancel: ");
-		String input = getSilentInput();
 		System.out.println("");
 		if(input.toUpperCase().equals("C")) {
 			return;
 		}
 		LocalDate date = stringToDate(input);
-		printDayEvents(date);
+		printDayEvents();
 	}
 	
 
@@ -385,19 +410,15 @@ public class Menu {
 	 * - takes no arguments
 	 * - returns nothing
 	 */
-	public void createEvent() {
+	public void createEvent(String title, String date, String startingTime, String endingTime) {
 		boolean created = false;
 		//menu for creating event
 		System.out.println("\nTo create an event enter a title, date, and times.");
 		while(created != true) {
 			System.out.print("Enter a Title: ");
-			String title = getSilentLineInput();
 			System.out.print("Enter a Date (MM/DD/YYYY): ");
-			String date = getSilentInput();
 			System.out.print("Enter a Starting Time (Military Time - HH:MM): ");
-			String startingTime = getSilentInput();
 			System.out.print("Enter an Ending Time (Military Time - HH:MM): ");
-			String endingTime = getSilentInput();
 			created = events.checkEvents(title, date, startingTime, endingTime);
 			if(created == false) {
 				System.out.println("Error: time conflict with existing event");
@@ -413,24 +434,17 @@ public class Menu {
 	 * - takes no arguments
 	 * - returns nothing
 	 */
-	public void viewBy() {
-		LocalDate selectedDay = LocalDate.now();
-		String choice= "";
-		while(!(choice.equals("D")) && !(choice.equals("M"))) {
-			System.out.print(viewBy);
-			choice = getInput();
-			//was it day view or month view?
-			if(choice.equals("D")) {
-				printDayEvents(selectedDay);
-				//asked to see more
-				seeMoreDays(selectedDay);
-			} else if(choice.equals("M")) {
-				//print month
-				printMonth(selectedDay);
-				seeMoreMonths(selectedDay);
-			} else {
-				invalid();
-			}
+	public void viewBy(String choiceA, String choiceB) {
+		if(choiceA.equals("D")) {
+			//print Day
+			printDayEvents();
+			seeMoreDays(choiceB);
+		} else if(choiceA.equals("M")) {
+			//print Month
+			printMonth();
+			seeMoreMonths(choiceB);
+		} else {
+			invalid();
 		}
 	}
 	
@@ -440,11 +454,13 @@ public class Menu {
 	 * @param selectedDay - a LocalDate object used to identify the month
 	 * - returns nothing
 	 */
-	public void printMonth(LocalDate selectedDay) {
+	public void printMonth() {
 		LocalDate tempDay = selectedDay.with(TemporalAdjusters.firstDayOfMonth());
 		//create header
 		System.out.println(" " + selectedDay.getMonth().toString() + ", "+ selectedDay.getYear() + " --\n");
+		textToLoad += " " + selectedDay.getMonth().toString() + ", "+ selectedDay.getYear() + " --\n";
 		System.out.println("Mo  Tu  We  Th  Fr  Sa  Su");
+		textToLoad += "Mo  Tu  We  Th  Fr  Sa  Su\n";
 		//prepare spacing at being of calendar
 		String buffer = "";
 		int startSize = tempDay.getDayOfWeek().getValue();
@@ -457,6 +473,7 @@ public class Menu {
 		String date;
 		int lengthOfMonth = tempDay.lengthOfMonth();
 		System.out.print(buffer);
+		textToLoad += buffer;
 		while(count != lengthOfMonth+startSize) {
 			date = String.valueOf(tempDay.getDayOfMonth());
 			hasEvent = checkDay(tempDay);
@@ -465,11 +482,14 @@ public class Menu {
 			}
 			if(tempDay.getDayOfMonth() < 10) {
 				System.out.print(date + "   ");
+				textToLoad += date + "   ";
 			} else {
 				System.out.print(date + "  ");
+				textToLoad += date + "  ";
 			}
 			if( (count % 7) == 0) {
 				System.out.println("");
+				textToLoad += "\n";
 			}
 			tempDay = tempDay.plusDays(1);
 			count++;
@@ -497,22 +517,18 @@ public class Menu {
 	 * @param selectedDay - a LocalDate object used to identify the month
 	 * - returns nothing
 	 */
-	public void seeMoreMonths(LocalDate selectedDay) {
-		String choice = "";
-		while(true) {
-			System.out.print("\n"+seeMoreDays);
-			choice = getInput();
-			if(choice.equals("P")) {
-				selectedDay = selectedDay.minusMonths(1);
-				printMonth(selectedDay);
-			} else if(choice.equals("N")) {
-				selectedDay = selectedDay.plusMonths(1);
-				printMonth(selectedDay);
-			} else if(choice.equals("G")) {
-				return;
-			}  else {
-				invalid();
-			}
+	public void seeMoreMonths(String choiceA) {
+		System.out.print("\n"+seeMoreDays);
+		if(choiceA.equals("P")) {
+			selectedDay = selectedDay.minusMonths(1);
+			printMonth();
+		} else if(choiceA.equals("N")) {
+			selectedDay = selectedDay.plusMonths(1);
+			printMonth();
+		} else if(choiceA.equals("G")) {
+			return;
+		}  else {
+			invalid();
 		}
 	}
 	
@@ -522,22 +538,19 @@ public class Menu {
 	 * @param selectedDay - a LocalDate object used to identify the month
 	 * - returns nothing
 	 */
-	public void seeMoreDays(LocalDate selectedDay) {
-		String choice = "";
-		while(true) {
-			System.out.print(seeMoreDays);
-			choice = getInput();
-			if(choice.equals("P")) {
-				selectedDay = selectedDay.minusDays(1);
-				printDayEvents(selectedDay);
-			} else if(choice.equals("N")) {
-				selectedDay = selectedDay.plusDays(1);
-				printDayEvents(selectedDay);
-			} else if(choice.equals("G")) {
-				return;
-			}  else {
-				invalid();
-			}
+	public void seeMoreDays(String choice) {
+		textToLoad = "";
+		System.out.print(seeMoreDays);
+		if(choice.equals("P")) {
+			selectedDay = selectedDay.minusDays(1);
+			printDayEvents();
+		} else if(choice.equals("N")) {
+			selectedDay = selectedDay.plusDays(1);
+			printDayEvents();
+		} else if(choice.equals("G")) {
+			return;
+		}  else {
+			invalid();
 		}
 	}
 	
@@ -546,18 +559,21 @@ public class Menu {
 	 * @param selectedDay - a LocalDate object used to identify the month
 	 * - returns nothing
 	 */
-	public void printDayEvents(LocalDate selectedDay) {
+	public void printDayEvents() {
 		ArrayList<Event> daysEvents = new ArrayList<Event>(events.getOrderedDays(selectedDay));
-		System.out.println(selectedDay.getDayOfWeek() + ", " + 
+		textToLoad += selectedDay.getDayOfWeek() + ", " + 
 				   selectedDay.getMonth() + " " + selectedDay.getDayOfMonth() + ", " + 
-				   selectedDay.getYear());
+				   selectedDay.getYear();
+		System.out.println(textToLoad);
 		//System.out.println("\n" + selectedDay.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
 		if(daysEvents.size() == 0) {
-			System.out.println(" - No Events Today\n");
+			textToLoad += " - No Events Today\n";
+			System.out.println(textToLoad);
 		} else {
 			for(Event e : daysEvents) {
-				System.out.println(" - " + e.getTitle() + " : " + 
-								   e.getStartTime() + " - "  + e.getEndTime());
+				textToLoad += " - " + e.getTitle() + " : " + 
+								   e.getStartTime() + " - "  + e.getEndTime();
+				System.out.println(textToLoad);
 			}
 		}	
 	}
