@@ -288,6 +288,8 @@ public class Menu {
 		JButton newEventSaveButton = new JButton("Save");
 		
 		JButton newEventCreateButton = new JButton("Create");
+		actionBar.add(newEventCreateButton, BorderLayout.WEST);
+
 		
 		createForm.add(newEventDescription);
 		createForm.add(newEventDate);
@@ -297,16 +299,22 @@ public class Menu {
 		createForm.add(newEventSaveButton);
 		createForm.setVisible(false);
 		actionBar.add(createForm, BorderLayout.CENTER);
-		actionBar.add(newEventCreateButton, BorderLayout.WEST);
 
 		newEventCreateButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				createForm.setVisible(!createForm.isVisible());
 				actionBar.repaint();
 			}
 		});
 
+		newEventSaveButton.addActionListener(action ->{ 
+			//create an event
+			events.checkEvents(newEventDescription.getText(),
+							   newEventDate.getText(),
+							   newEventStart.getText(),
+							   newEventEnd.getText());	
+			//if given date equals today's date add 
+		});
 		
 		frame.add(actionBar, BorderLayout.NORTH);
 		frame.add(currentDayFrame, BorderLayout.EAST);
