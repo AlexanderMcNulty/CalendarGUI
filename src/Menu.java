@@ -1,6 +1,9 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -24,6 +27,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -240,9 +244,9 @@ public class Menu {
 		JFrame frame = new JFrame();
 		JPanel currentDayFrame = new JPanel();
 		JTextArea label1 = new JTextArea();		
-
 		
 		JButton previousDayButton  = new JButton(); 
+		previousDayButton.setText("<");
 		previousDayButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -254,6 +258,7 @@ public class Menu {
 			}
 		});
 		JButton nextDayButton = new JButton();
+		nextDayButton.setText(">");
 		nextDayButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -268,23 +273,44 @@ public class Menu {
 		label1.setText(textToLoad);
 		textToLoad = "";
 
-		/*
-		nextDayButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				viewBy("D","N");
-				label1.setText(textToLoad);
-				textToLoad = "";
-			}
-		});
-		*/
-
 		currentDayFrame.add(previousDayButton, BorderLayout.WEST);
 		currentDayFrame.add(label1, BorderLayout.CENTER);
 		currentDayFrame.add(nextDayButton, BorderLayout.EAST);
-		frame.add(currentDayFrame, BorderLayout.EAST);
 		
+		JPanel actionBar = new JPanel(new BorderLayout());
+		//actionBar.setLayout();
+		JPanel createForm = new JPanel();
+		JTextField newEventDescription = new JTextField("Description Here", 30);
+		JTextField newEventDate = new JTextField("Date", 5);
+		JTextField newEventStart = new JTextField("00:00", 5);
+		
+		JTextField newEventEnd = new JTextField("24:00", 5);
+		JButton newEventSaveButton = new JButton("Save");
+		
+		JButton newEventCreateButton = new JButton("Create");
+		
+		createForm.add(newEventDescription);
+		createForm.add(newEventDate);
+		createForm.add(newEventStart);
+		createForm.add(new JLabel("to "));
+		createForm.add(newEventEnd);
+		createForm.add(newEventSaveButton);
+		createForm.setVisible(false);
+		actionBar.add(createForm, BorderLayout.CENTER);
+		actionBar.add(newEventCreateButton, BorderLayout.WEST);
+
+		newEventCreateButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				createForm.setVisible(!createForm.isVisible());
+				actionBar.repaint();
+			}
+		});
+
+		
+		frame.add(actionBar, BorderLayout.NORTH);
+		frame.add(currentDayFrame, BorderLayout.EAST);
+
 		
 		//readline read line by line contrusting leaf shaps to build a composite shpe
 		JTextArea label2 = new JTextArea();
@@ -295,7 +321,7 @@ public class Menu {
 		
 		
 		
-		frame.setPreferredSize(new Dimension(690, 350));
+		frame.setPreferredSize(new Dimension(750, 350));
 		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.lightGray));
 		frame.getContentPane().setBackground(Color.WHITE);
 		//frame.add(data, BorderLayout.SOUTH);
@@ -416,7 +442,6 @@ public class Menu {
 		System.out.println("\nResults: Event was created.");
 	}
 	
-
 	/**
 	 * 'viewBy' allows views to browse available dates by day or by month
 	 * - takes no arguments
