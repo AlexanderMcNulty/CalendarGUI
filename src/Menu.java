@@ -42,7 +42,7 @@ public class Menu {
 							  "[V]iew by  [C]reate, [G]o to [E]vent list [D]elete  [Q]uit\n";			
 	private String viewBy = "\n[D]ay View or [M]onth view\n";
 	private String seeMoreDays = "\n[P]revious or [N]ext or [G]o back to main menu ?\n";
-	private String textToLoad;
+	private String textToLoad = "";
 	private LocalDate selectedDay;
 	
 	/**
@@ -229,9 +229,6 @@ public class Menu {
 	 * - Takes no arguments.
 	 * - Returns nothing
 	 */
-	
-
-	
 	public void run() {
 		/*
 		String choice = "";
@@ -243,10 +240,7 @@ public class Menu {
 		JFrame frame = new JFrame();
 		JPanel currentDayFrame = new JPanel();
 		JTextArea label1 = new JTextArea();		
-		
-		this.viewBy("D","G");
-		label1.setText(textToLoad);
-		textToLoad = "";
+
 		
 		JButton previousDayButton  = new JButton(); 
 		previousDayButton.addActionListener(new ActionListener() {
@@ -259,7 +253,6 @@ public class Menu {
 				label1.repaint();
 			}
 		});
-		
 		JButton nextDayButton = new JButton();
 		nextDayButton.addActionListener(new ActionListener() {
 			@Override
@@ -271,6 +264,10 @@ public class Menu {
 				currentDayFrame.repaint();
 			}
 		});
+		this.viewBy("D","G");
+		label1.setText(textToLoad);
+		textToLoad = "";
+
 		/*
 		nextDayButton.addActionListener(new ActionListener() {
 			@Override
@@ -283,8 +280,8 @@ public class Menu {
 		});
 		*/
 
-		currentDayFrame.add(label1, BorderLayout.CENTER);
 		currentDayFrame.add(previousDayButton, BorderLayout.WEST);
+		currentDayFrame.add(label1, BorderLayout.CENTER);
 		currentDayFrame.add(nextDayButton, BorderLayout.EAST);
 		frame.add(currentDayFrame, BorderLayout.EAST);
 		
@@ -294,20 +291,11 @@ public class Menu {
 		this.viewBy("M", "G");
 		label2.setText(textToLoad);
 		textToLoad = "";
-		frame.add(label2, BorderLayout.NORTH);
+		frame.add(label2, BorderLayout.WEST);
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		frame.setPreferredSize(new Dimension(290, 350));
+		frame.setPreferredSize(new Dimension(690, 350));
 		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.lightGray));
 		frame.getContentPane().setBackground(Color.WHITE);
 		//frame.add(data, BorderLayout.SOUTH);
@@ -539,12 +527,13 @@ public class Menu {
 	 * - returns nothing
 	 */
 	public void seeMoreDays(String choice) {
-		textToLoad = "";
 		System.out.print(seeMoreDays);
 		if(choice.equals("P")) {
+			textToLoad = "";
 			selectedDay = selectedDay.minusDays(1);
 			printDayEvents();
 		} else if(choice.equals("N")) {
+			textToLoad = "";
 			selectedDay = selectedDay.plusDays(1);
 			printDayEvents();
 		} else if(choice.equals("G")) {
@@ -567,11 +556,12 @@ public class Menu {
 		System.out.println(textToLoad);
 		//System.out.println("\n" + selectedDay.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
 		if(daysEvents.size() == 0) {
-			textToLoad += " - No Events Today\n";
+			textToLoad += "\n\n - No Events Today\n";
 			System.out.println(textToLoad);
 		} else {
+			textToLoad += "\n";
 			for(Event e : daysEvents) {
-				textToLoad += " - " + e.getTitle() + " : " + 
+				textToLoad += "\n - " + e.getTitle() + " : " + 
 								   e.getStartTime() + " - "  + e.getEndTime();
 				System.out.println(textToLoad);
 			}
