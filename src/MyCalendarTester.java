@@ -19,11 +19,9 @@ public class MyCalendarTester {
 	 * @param args - a standard parameter for a packages main function - No args are necessary
 	 * @throws FileNotFoundException - if file events.txt is not found
 	 */
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws Exception {
 		System.out.println("My Calendar Application starting...");
-		Menu menu = new Menu("events.txt");
-		menu.run();
-		menu.createOutputFile("output.txt");
+		CalendarGUI gui = new CalendarGUI("events.txt", "output.txt");
 		System.out.println("\n<terminated>");
 		
 				

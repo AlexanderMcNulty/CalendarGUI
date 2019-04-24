@@ -39,7 +39,7 @@ import java.awt.Dimension;
  * Class can load and save events from/to a text file
  * Offers users the ability to view events, create events and delete events
  */
-public class Menu {
+public class Calendar {
 	
 	private EventList events;
 	private String choice = null;
@@ -55,7 +55,7 @@ public class Menu {
 	 * @param fileName - file to load events from
 	 * @throws FileNotFoundException if 'file' not found
 	 */
-	public Menu(String fileName) throws FileNotFoundException  {
+	public Calendar(String fileName) throws FileNotFoundException  {
 		initializeEventsList(fileName);
 		selectedDay = LocalDate.now();
 	}
@@ -228,119 +228,6 @@ public class Menu {
 	
 
 	
-	/**
-	 * 'run' engages the user's terminal interface
-	 * function terminates when quits from 'mainMenu()'
-	 * - Takes no arguments.
-	 * - Returns nothing
-	 */
-	public void run() {
-		/*
-		String choice = "";
-		while(!(choice.equals("Q"))) {
-			choice = mainMenu();
-		}
-		*/
-
-		JFrame frame = new JFrame();
-		JPanel currentDayFrame = new JPanel();
-		JTextArea label1 = new JTextArea();		
-		
-		JButton previousDayButton  = new JButton(); 
-		previousDayButton.setText("<");
-		previousDayButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				viewBy("D","P");
-				label1.setText(textToLoad);
-				textToLoad = "";
-				label1.repaint();
-			}
-		});
-		JButton nextDayButton = new JButton();
-		nextDayButton.setText(">");
-		nextDayButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				viewBy("D","N");
-				label1.setText(textToLoad);
-				textToLoad = "";
-				currentDayFrame.repaint();
-			}
-		});
-		this.viewBy("D","G");
-		label1.setText(textToLoad);
-		textToLoad = "";
-
-		currentDayFrame.add(previousDayButton, BorderLayout.WEST);
-		currentDayFrame.add(label1, BorderLayout.CENTER);
-		currentDayFrame.add(nextDayButton, BorderLayout.EAST);
-		JPanel actionBar = new JPanel(new BorderLayout());
-		actionBar.setBorder(BorderFactory.createLineBorder(Color.WHITE, 8));
-		//actionBar.setLayout();
-		JPanel createForm = new JPanel();
-		JTextField newEventDescription = new JTextField("Description Here", 30);
-		JTextField newEventDate = new JTextField(selectedDay.getMonth().getValue() + "/" + selectedDay.getDayOfMonth() +"/" + selectedDay.getYear(), 6);
-		JTextField newEventStart = new JTextField("21:00", 4);
-		
-		JTextField newEventEnd = new JTextField("23:00", 4);
-		JButton newEventSaveButton = new JButton("Save");
-		
-		JButton newEventCreateButton = new JButton("Create");
-		actionBar.add(newEventCreateButton, BorderLayout.WEST);
-
-		
-		createForm.add(newEventDescription);
-		createForm.add(newEventDate);
-		createForm.add(newEventStart);
-		createForm.add(new JLabel("to "));
-		createForm.add(newEventEnd);
-		createForm.add(newEventSaveButton);
-		createForm.setVisible(false);
-		actionBar.add(createForm, BorderLayout.CENTER);
-
-		newEventCreateButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				createForm.setVisible(!createForm.isVisible());
-				actionBar.repaint();
-			}
-		});
-
-		newEventSaveButton.addActionListener(action ->{ 
-			events.checkEvents(newEventDescription.getText(),
-							   newEventDate.getText(),
-							   newEventStart.getText(),
-							   newEventEnd.getText());
-			this.viewBy("D","G");
-			label1.setText(textToLoad);
-			textToLoad = "";
-			//currentDayFrame.repaint();
-			label1.repaint();
-		});
-		
-		frame.add(actionBar, BorderLayout.NORTH);
-		frame.add(currentDayFrame, BorderLayout.EAST);
-
-		
-		//readline read line by line contrusting leaf shaps to build a composite shpe
-		JTextArea label2 = new JTextArea();
-		this.viewBy("M", "G");
-		label2.setText(textToLoad);
-		textToLoad = "";
-		frame.add(label2, BorderLayout.WEST);
-		
-		
-		
-		frame.setPreferredSize(new Dimension(750, 350));
-		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.lightGray));
-		frame.getContentPane().setBackground(Color.WHITE);
-		//frame.add(data, BorderLayout.SOUTH);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setVisible(true);
-	}
 	
 
 	/**
@@ -603,5 +490,21 @@ public class Menu {
 				System.out.println(textToLoad);
 			}
 		}	
+	}
+
+
+	public EventList getEvents() {
+		return events;
+	}
+	
+	public String getText() {
+		String toReturn = textToLoad;
+		textToLoad = "";
+		return toReturn;
+	}
+
+
+	public LocalDate getSelectedDay() {
+		return selectedDay;
 	}
 }
