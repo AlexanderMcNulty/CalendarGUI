@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -276,15 +277,15 @@ public class Menu {
 		currentDayFrame.add(previousDayButton, BorderLayout.WEST);
 		currentDayFrame.add(label1, BorderLayout.CENTER);
 		currentDayFrame.add(nextDayButton, BorderLayout.EAST);
-		
 		JPanel actionBar = new JPanel(new BorderLayout());
+		actionBar.setBorder(BorderFactory.createLineBorder(Color.WHITE, 8));
 		//actionBar.setLayout();
 		JPanel createForm = new JPanel();
 		JTextField newEventDescription = new JTextField("Description Here", 30);
-		JTextField newEventDate = new JTextField("Date", 5);
-		JTextField newEventStart = new JTextField("00:00", 5);
+		JTextField newEventDate = new JTextField(selectedDay.getMonth().getValue() + "/" + selectedDay.getDayOfMonth() +"/" + selectedDay.getYear(), 6);
+		JTextField newEventStart = new JTextField("21:00", 4);
 		
-		JTextField newEventEnd = new JTextField("24:00", 5);
+		JTextField newEventEnd = new JTextField("23:00", 4);
 		JButton newEventSaveButton = new JButton("Save");
 		
 		JButton newEventCreateButton = new JButton("Create");
@@ -308,12 +309,15 @@ public class Menu {
 		});
 
 		newEventSaveButton.addActionListener(action ->{ 
-			//create an event
 			events.checkEvents(newEventDescription.getText(),
 							   newEventDate.getText(),
 							   newEventStart.getText(),
-							   newEventEnd.getText());	
-			//if given date equals today's date add 
+							   newEventEnd.getText());
+			this.viewBy("D","G");
+			label1.setText(textToLoad);
+			textToLoad = "";
+			//currentDayFrame.repaint();
+			label1.repaint();
 		});
 		
 		frame.add(actionBar, BorderLayout.NORTH);
