@@ -22,9 +22,7 @@ public class MyCalendarTester {
 	public static void main(String[] args) throws Exception {
 		System.out.println("My Calendar Application starting...");
 		CalendarGUI gui = new CalendarGUI("events.txt", "output.txt");
-		System.out.println("\n<terminated>");
-		
-				
+		System.out.println("\n<terminated>");	
 	}
 	
 }

@@ -18,6 +18,7 @@ import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public class Calendar {
 	private String seeMoreDays = "\n[P]revious or [N]ext or [G]o back to main menu ?\n";
 	private String textToLoad = "";
 	private LocalDate selectedDay;
+	private ArrayList<Observer> observers;
+
 	
 	/**
 	 * Constructs a 'Menu' object.
@@ -58,6 +61,7 @@ public class Calendar {
 	public Calendar(String fileName) throws FileNotFoundException  {
 		initializeEventsList(fileName);
 		selectedDay = LocalDate.now();
+		observers = new ArrayList<Observer>();
 	}
 	
 
@@ -358,6 +362,7 @@ public class Calendar {
 		} else {
 			invalid();
 		}
+		this.stateChanged();
 	}
 	
 
@@ -503,6 +508,15 @@ public class Calendar {
 		return toReturn;
 	}
 
+	public void attach(Observer observer) {
+		observers.add(observer);
+	}
+	public void stateChanged() {
+		for(Observer observer : observers) {
+			observer.viewNotify();
+		}
+	}
+	
 
 	public LocalDate getSelectedDay() {
 		return selectedDay;

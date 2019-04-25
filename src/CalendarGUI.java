@@ -17,34 +17,44 @@ public class CalendarGUI {
 	
 	public Calendar model;
 
+	public class hourComponent extends JTextArea implements Observer {
+
+		/**
+		 * Default value, used to suppress warning
+		 */
+		private static final long serialVersionUID = 1L;
+		public void viewNotify() {
+			// TODO Auto-generated method stub
+			this.setText(model.getText());
+		}
+		public hourComponent() {
+			
+		}
+	}
+	
 	public CalendarGUI(String inputFile, String outputFile) throws Exception {
 		
-		 model = new Calendar(inputFile);
+		model = new Calendar(inputFile);
 		
 		JFrame frame = new JFrame();
 		JPanel currentDayFrame = new JPanel();
-		JTextArea label1 = new JTextArea();		
+		
+		hourComponent label1 = new hourComponent();	
+		
+		model.attach(label1);
 		
 		JButton previousDayButton  = new JButton(); 
 		previousDayButton.setText("<");
 		previousDayButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				model.viewBy("D","P");
-				label1.setText(model.getText());
-				label1.repaint();
 			}
 		});
 		JButton nextDayButton = new JButton();
 		nextDayButton.setText(">");
 		nextDayButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				model.viewBy("D","N");
-				label1.setText(model.getText());
-				currentDayFrame.repaint();
 			}
 		});
 		model.viewBy("D","G");
