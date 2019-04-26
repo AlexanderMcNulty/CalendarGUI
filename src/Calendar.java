@@ -362,7 +362,6 @@ public class Calendar {
 		} else {
 			invalid();
 		}
-		this.stateChanged();
 	}
 	
 
@@ -372,6 +371,7 @@ public class Calendar {
 	 * - returns nothing
 	 */
 	public void printMonth() {
+		textToLoad = "";
 		LocalDate tempDay = selectedDay.with(TemporalAdjusters.firstDayOfMonth());
 		//create header
 		System.out.println(" " + selectedDay.getMonth().toString() + ", "+ selectedDay.getYear() + " --\n");
@@ -439,9 +439,11 @@ public class Calendar {
 		if(choiceA.equals("P")) {
 			selectedDay = selectedDay.minusMonths(1);
 			printMonth();
+			this.stateChanged();
 		} else if(choiceA.equals("N")) {
 			selectedDay = selectedDay.plusMonths(1);
 			printMonth();
+			this.stateChanged();
 		} else if(choiceA.equals("G")) {
 			return;
 		}  else {
@@ -458,13 +460,13 @@ public class Calendar {
 	public void seeMoreDays(String choice) {
 		System.out.print(seeMoreDays);
 		if(choice.equals("P")) {
-			textToLoad = "";
 			selectedDay = selectedDay.minusDays(1);
 			printDayEvents();
+			this.stateChanged();
 		} else if(choice.equals("N")) {
-			textToLoad = "";
 			selectedDay = selectedDay.plusDays(1);
 			printDayEvents();
+			this.stateChanged();
 		} else if(choice.equals("G")) {
 			return;
 		}  else {
@@ -478,6 +480,7 @@ public class Calendar {
 	 * - returns nothing
 	 */
 	public void printDayEvents() {
+		textToLoad = "";
 		ArrayList<Event> daysEvents = new ArrayList<Event>(events.getOrderedDays(selectedDay));
 		textToLoad += selectedDay.getDayOfWeek() + ", " + 
 				   selectedDay.getMonth() + " " + selectedDay.getDayOfMonth() + ", " + 
@@ -510,6 +513,7 @@ public class Calendar {
 
 	public void attach(Observer observer) {
 		observers.add(observer);
+		stateChanged();
 	}
 	public void stateChanged() {
 		for(Observer observer : observers) {

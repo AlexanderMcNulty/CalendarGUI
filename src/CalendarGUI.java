@@ -17,18 +17,27 @@ public class CalendarGUI {
 	
 	public Calendar model;
 
-	public class hourComponent extends JTextArea implements Observer {
-
-		/**
-		 * Default value, used to suppress warning
-		 */
+	public class HourComponent extends JTextArea implements Observer {
 		private static final long serialVersionUID = 1L;
 		public void viewNotify() {
-			// TODO Auto-generated method stub
+			model.viewBy("D","G");
 			this.setText(model.getText());
 		}
-		public hourComponent() {
-			
+		public HourComponent() {
+			model.viewBy("D","G");
+			this.setText(model.getText());
+		}
+	}
+	
+	public class MonthComponent extends JTextArea implements Observer {
+		private static final long serialVersionUID = 1L;
+		public void viewNotify() {
+			model.viewBy("M","G");
+			this.setText(model.getText());
+		}
+		public MonthComponent() {
+			model.viewBy("M","G");
+			this.setText(model.getText());
 		}
 	}
 	
@@ -39,10 +48,10 @@ public class CalendarGUI {
 		JFrame frame = new JFrame();
 		JPanel currentDayFrame = new JPanel();
 		
-		hourComponent label1 = new hourComponent();	
+		HourComponent label1 = new HourComponent();	
 		
 		model.attach(label1);
-		
+
 		JButton previousDayButton  = new JButton(); 
 		previousDayButton.setText("<");
 		previousDayButton.addActionListener(new ActionListener() {
@@ -57,10 +66,7 @@ public class CalendarGUI {
 				model.viewBy("D","N");
 			}
 		});
-		model.viewBy("D","G");
-		label1.setText(model.getText());
 		
-
 		currentDayFrame.add(previousDayButton, BorderLayout.WEST);
 		currentDayFrame.add(label1, BorderLayout.CENTER);
 		currentDayFrame.add(nextDayButton, BorderLayout.EAST);
@@ -79,7 +85,6 @@ public class CalendarGUI {
 		
 		JButton newEventCreateButton = new JButton("Create");
 		actionBar.add(newEventCreateButton, BorderLayout.WEST);
-
 		
 		createForm.add(newEventDescription);
 		createForm.add(newEventDate);
@@ -88,6 +93,8 @@ public class CalendarGUI {
 		createForm.add(newEventEnd);
 		createForm.add(newEventSaveButton);
 		createForm.setVisible(false);
+		JButton exitButton = new JButton("Exit");
+		actionBar.add(exitButton, BorderLayout.EAST);
 		actionBar.add(createForm, BorderLayout.CENTER);
 
 		newEventCreateButton.addActionListener(new ActionListener() {
@@ -98,27 +105,12 @@ public class CalendarGUI {
 		});
 
 		newEventSaveButton.addActionListener(action ->{ 
-			model.getEvents().checkEvents(newEventDescription.getText(),
+			model.createEvent(newEventDescription.getText(),
 							   newEventDate.getText(),
 							   newEventStart.getText(),
 							   newEventEnd.getText());
-			model.viewBy("D","G");
-			label1.setText(model.getText());
-			//currentDayFrame.repaint();
-			label1.repaint();
 		});
 		
-		frame.add(actionBar, BorderLayout.NORTH);
-		frame.add(currentDayFrame, BorderLayout.EAST);
-
-		
-		//readline read line by line contrusting leaf shaps to build a composite shpe
-		JTextArea label2 = new JTextArea();
-		model.viewBy("M", "G");
-		label2.setText(model.getText());
-		frame.add(label2, BorderLayout.WEST);
-		
-		JButton exitButton = new JButton("Exit");
 		exitButton.addActionListener(args -> {
 			try {
 				model.createOutputFile(outputFile);
@@ -128,6 +120,14 @@ public class CalendarGUI {
 			}
 			frame.dispose();
 		});
+		
+		frame.add(actionBar, BorderLayout.NORTH);
+		frame.add(currentDayFrame, BorderLayout.EAST);
+		
+		MonthComponent months = new MonthComponent();
+		model.attach(months);
+		frame.add(months, BorderLayout.WEST);
+
 		
 		frame.setPreferredSize(new Dimension(750, 350));
 		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.lightGray));
