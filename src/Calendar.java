@@ -375,14 +375,14 @@ public class Calendar {
 		LocalDate tempDay = selectedDay.with(TemporalAdjusters.firstDayOfMonth());
 		//create header
 		System.out.println(" " + selectedDay.getMonth().toString() + ", "+ selectedDay.getYear() + " --\n");
-		textToLoad += " " + selectedDay.getMonth().toString() + ", "+ selectedDay.getYear() + " --\n";
+		textToLoad += " " + selectedDay.getMonth().toString().substring(0,1)+ selectedDay.getMonth().toString().toLowerCase().substring(1) + ", "+ selectedDay.getYear() + "\n";
 		System.out.println("Mo  Tu  We  Th  Fr  Sa  Su");
-		textToLoad += "Mo  Tu  We  Th  Fr  Sa  Su\n";
+		textToLoad += "Mo Tu We Th Fr Sa Su\n";
 		//prepare spacing at being of calendar
 		String buffer = "";
 		int startSize = tempDay.getDayOfWeek().getValue();
 		for(int i = 1; i < startSize; i++) {
-			buffer += "    ";
+			buffer += "| ";
 		}
 		//print days in month
 		int count = startSize;
@@ -395,14 +395,14 @@ public class Calendar {
 			date = String.valueOf(tempDay.getDayOfMonth());
 			hasEvent = checkDay(tempDay);
 			if (hasEvent) {
-				date = "[" + date + "]";
+				//date = "[" + date + "]";
 			}
 			if(tempDay.getDayOfMonth() < 10) {
 				System.out.print(date + "   ");
-				textToLoad += date + "   ";
+				textToLoad += date + " ";
 			} else {
 				System.out.print(date + "  ");
-				textToLoad += date + "  ";
+				textToLoad += date + " ";
 			}
 			if( (count % 7) == 0) {
 				System.out.println("");
@@ -411,6 +411,7 @@ public class Calendar {
 			tempDay = tempDay.plusDays(1);
 			count++;
 		}
+		textToLoad += "| | | | | | | | | | | | | | | | | |";
 	}
 	
 

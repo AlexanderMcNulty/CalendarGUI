@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -40,11 +41,12 @@ public class CalendarGUI {
 //										events[count++]
 //									));
 //				} else {
-				add(new HourComponent(i + ":00 - " + (i+1) + ":00"));
+				add(new HourComponent(i + ":00 - " + (i+1) + ":00" + events[1]));
 //				}
 			}
 		}
 		public void viewNotify() {
+			this.removeAll();
 			model.viewBy("D","G");
 			String[] events = model.getText().split("-");
 			int count = 1;
@@ -54,9 +56,10 @@ public class CalendarGUI {
 //										events[count++]
 //									));
 //				} else {
-					add(new HourComponent(i + ":00 - " + (i+1) + ":00"));
+					add(new HourComponent(i + ":00 - " + (i+1) + ":00" + events[1]));
 //				}
 			}
+			revalidate();
 		}
 	}
 	
@@ -71,15 +74,59 @@ public class CalendarGUI {
 	}
 	
 
-	public class MonthComponent extends JTextArea implements Observer {
+	public class MonthComponent extends JPanel implements Observer {
 		private static final long serialVersionUID = 1L;
 		public void viewNotify() {
+			this.removeAll();
 			model.viewBy("M","G");
-			this.setText(model.getText());
+			String[] components = model.getText().split("\n"); 
+			
+			this.add(new JLabel(components[0]), BorderLayout.NORTH);
+			
+			JPanel weeks = new JPanel(new GridLayout(0,7,2,2));
+			String[] dayNames = components[1].split(" ");
+			for(int i = 0; i < dayNames.length; i++) {
+				JLabel dayName = new JLabel(dayNames[i]);
+				weeks.add(dayName);
+			}
+			for(int i = 0; i < 7*5; i++) {
+				String cur = components[2+(i/7)].split(" ")[i%7];
+				if(cur.contains("|")) {
+					weeks.add(new JLabel());
+				} else {
+					weeks.add(new JButton(cur));
+				}
+			}
+			this.add(weeks, BorderLayout.CENTER);
+			revalidate();
+			
 		}
 		public MonthComponent() {
+			this.setLayout(new BorderLayout());
+			this.setPreferredSize(new Dimension(500, 400));
+
 			model.viewBy("M","G");
-			this.setText(model.getText());
+			String[] components = model.getText().split("\n"); 
+			
+			this.add(new JLabel(components[0]), BorderLayout.NORTH);
+			
+			JPanel weeks = new JPanel(new GridLayout(0,7,2,2));
+			String[] dayNames = components[1].split(" ");
+			for(int i = 0; i < dayNames.length; i++) {
+				JLabel dayName = new JLabel(dayNames[i]);
+				weeks.add(dayName);
+			}
+			for(int i = 0; i < 7*5; i++) {
+				String cur = components[2+(i/7)].split(" ")[i%7];
+				if(cur.contains("|")) {
+					weeks.add(new JLabel());
+				} else {
+					weeks.add(new JButton(cur));
+				}
+			}
+			
+			this.add(weeks, BorderLayout.CENTER);
+			
 		}
 	}
 	
