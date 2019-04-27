@@ -17,6 +17,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import static javax.swing.ScrollPaneConstants.*;
+
+
 public class CalendarGUI {
 	
 	public Calendar model;
@@ -26,6 +29,7 @@ public class CalendarGUI {
 		String hours;
 		public DayComponent() {
 			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+			this.setSize(500,400);
 			model.viewBy("D","G");
 			String[] events = model.getText().split("-");
 			int count = 1;
@@ -59,6 +63,8 @@ public class CalendarGUI {
 		public HourComponent(String timeSlot){
 			add(new JLabel(timeSlot), BorderLayout.WEST);
 			add(new JLabel("Potential Event"), BorderLayout.CENTER);
+			this.setSize(500,400);
+
 		}
 		
 	}
@@ -169,6 +175,7 @@ public class CalendarGUI {
 		currentDayFrame.setLayout(new BorderLayout());
 		DayComponent label1 = new DayComponent();
 		JScrollPane scrollPane = new JScrollPane(label1);
+		scrollPane.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
 		model.attach(label1);
 		JButton previousDayButton  = new JButton(); 
 		previousDayButton.setText("<");
@@ -189,7 +196,7 @@ public class CalendarGUI {
 		changeDay.add(nextDayButton, BorderLayout.WEST);
 		currentDayFrame.add(changeDay, BorderLayout.NORTH);
 		currentDayFrame.add(scrollPane, BorderLayout.CENTER);
-		frame.add(currentDayFrame, BorderLayout.EAST);
+		frame.add(currentDayFrame, BorderLayout.CENTER);
 	}
 	
 }
