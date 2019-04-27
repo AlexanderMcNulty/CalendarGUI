@@ -338,11 +338,11 @@ public class Calendar {
 			System.out.print("Enter an Ending Time (Military Time - HH:MM): ");
 			created = events.checkEvents(title, date, startingTime, endingTime);
 			if(created == false) {
-				System.out.println("Error: time conflict with existing event");
-				System.out.println("\n --- please try again \n");
+				created = true;
 			}
 		}
 		System.out.println("\nResults: Event was created.");
+		stateChanged();
 	}
 	
 	/**
