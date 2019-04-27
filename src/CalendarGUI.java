@@ -23,7 +23,8 @@ import static javax.swing.ScrollPaneConstants.*;
 public class CalendarGUI {
 	
 	public Calendar model;
-
+	JFrame frame;
+	
 	public class DayComponent extends JPanel implements Observer {
 		private static final long serialVersionUID = 1L;
 		String hours;
@@ -100,27 +101,21 @@ public class CalendarGUI {
 	public CalendarGUI(String inputFile, String outputFile) throws Exception {
 		
 		model = new Calendar(inputFile);
+		frame = new JFrame();
 		
-		JFrame frame = new JFrame();
-		
-		createCurrentDayFrame(frame);
-		createActionBar(frame, outputFile);
-
-		MonthComponent months = new MonthComponent();
-		model.attach(months);
-		frame.add(months, BorderLayout.WEST);
-
+		createDayPanel();
+		createActionBar(outputFile);
+		createMonthPanel();
 		
 		frame.setPreferredSize(new Dimension(850, 450));
 		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.lightGray));
 		frame.getContentPane().setBackground(Color.WHITE);
-		//frame.add(data, BorderLayout.SOUTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
 	}
 
-	private void createActionBar(JFrame frame, String outputFile) {
+	private void createActionBar(String outputFile) {
 		// TODO Auto-generated method stub
 		JPanel actionBar = new JPanel(new BorderLayout());
 		actionBar.setBorder(BorderFactory.createLineBorder(Color.WHITE, 8));
@@ -170,8 +165,9 @@ public class CalendarGUI {
 		
 	}
 
-	private void createCurrentDayFrame(JFrame frame) {
+	private void createDayPanel() {
 		JPanel currentDayFrame = new JPanel();
+		currentDayFrame.setBorder(BorderFactory.createLineBorder(Color.WHITE, 8));
 		currentDayFrame.setLayout(new BorderLayout());
 		DayComponent label1 = new DayComponent();
 		JScrollPane scrollPane = new JScrollPane(label1);
@@ -198,5 +194,32 @@ public class CalendarGUI {
 		currentDayFrame.add(scrollPane, BorderLayout.CENTER);
 		frame.add(currentDayFrame, BorderLayout.CENTER);
 	}
+	
+	private void createMonthPanel() {
+		MonthComponent month = new MonthComponent();
+		month.setBorder(BorderFactory.createLineBorder(Color.WHITE, 8));
+		model.attach(month);
+		frame.add(month, BorderLayout.WEST);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
